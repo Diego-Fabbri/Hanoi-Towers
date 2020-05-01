@@ -1,0 +1,103 @@
+public class Main {
+	/*La Torre di Hanoi è un rompicapo matematico composto da tre paletti e un certo numero di dischi di grandezza decrescente, che possono essere infilati in uno qualsiasi dei paletti.
+Il gioco inizia con tutti i dischi incolonnati su un paletto in ordine decrescente, in modo da formare un cono.
+ Lo scopo del gioco è portare tutti i dischi su un paletto diverso, potendo spostare solo un disco alla volta e potendo mettere un disco solo su un altro disco più grande, mai su uno più piccolo.
+    |                    |              |
+    |                    |              |
+    |                    |              |
+    |                    |              |
+   ___                  ___            ___
+   A                     B              C
+   A:paletto orifìginario dove si trovano i dischi inizialmente
+   B:paletto destinazione
+   C:paletto di supporto per risolvere il rompicapo
+   n=numero di dischi
+   CASO GENERALE: avendo a disposizione n dischi il numero minimo di mosse per risolvere il rompicapo è  2^n-1 .
+     */
+	
+	
+	static private int num = 0; //variabile statica condivisa da tutti i metodi della classe che conta il numero di mosse effettuate
+	
+	private static void moveOne(char A, char B) {//METODO CHE CI DICE CHE SI SPOSTA UN DISCO DAL PALETTO DA AL PALETTO A
+		//incrementa il contatore num ogni volta che viene effettuato una mossa e la stampa
+		System.out.println(++num + " - Sposta un disco da " + A + " a " + B);
+	}
+	
+	private static void hanoi(int n, char A, char B, char C) {//METODO HANOI CHE RISOLVE IL ROMPICAPO
+		if (n > 0) {//se il numero di dischi è strattamente positivo
+			        // per n=0 non ci sono mosse da effettuare
+			hanoi(n-1, A, C, B);//si richiama ricorsivamente la funzione su n-1 dischi fino ad arrivare al caso base
+			moveOne(A,B);//si sposta disco dal paletto A al paletto B
+			hanoi(n-1, C, B, A);//si richiama ricorsivamente la funzione su n-1 dischi fino ad arrivare al caso base
+		}
+		/*SOLUZIONE E ALGORITMO
+		 * La soluzione base del gioco della torre di Hanoi si formula in modo ricorsivo.[8][9]
+
+Siano i paletti etichettati con A, B e C, e i dischi numerati da 1 (il più piccolo) a n (il più grande). 
+L'algoritmo si esprime come segue:
+--Sposta i primi n-1 dischi da A a B. (Questo lascia il disco n da solo sul paletto A)
+--Sposta il disco n da A a C
+--Sposta n-1 dischi da B a C
+Per spostare n dischi si richiede di compiere un'operazione elementare (spostamento di un singolo disco) ed una complessa, ossia lo spostamento di n-1 dischi. 
+Tuttavia anche questa operazione si risolve nello stesso modo, richiedendo come operazione complessa lo spostamento di n-2 dischi. 
+Iterando questo ragionamento(METODO INDUZIONE) si riduce il processo complesso ad uno elementare, ovvero lo spostamento di n-(n-1)=1 disco.*/
+	}
+	/*COMPLESSITA' DEL METODO hanoi(int n, char A, char B, char C)
+	 NB=O(1) complessità della verifica in if+ metodo moveOne
+	 
+	 T(hanoi;n)=2*T(hanoi;n-1)+O(1)=.....esplicitando la ricorsione
+	 T(hanoi;n)=2*(2*T(hanoi;n-2)+O(1))+O(1)=.....esplicitando la ricorsione
+	  T(hanoi;n)=4*(2*T(hanoi;n-3)+O(1))+2O(1)=.... e così via
+	  Questo è un algoritmo ricorsivo la cui complessità temporale è esponenziale.
+	  
+	  O(n)= complessità spaziale dovuta alla presenza della ricorsione.
+	 */
+	
+	private static void print(int[] V) {//METODO DI STAMPA DI UN VETTORE 
+		System.out.print(++num + " [ "+ V[0]);
+		for (int i=1; i<V.length; i++) 
+			System.out.print(", " + V[i]);
+		System.out.println("]");
+	}
+	
+	private static void swap(int[] V, int i, int j) {//METODO CHE SCAMBIA POSZIONE DI DUE ELEMENTI
+		int x = V[i];
+		V[i] = V[j];
+		V[j] = x;
+	}
+	
+	/*PERMUTAZIONI
+Sia un insieme costituito da n oggetti distinti.Si dice permutazione semplice di un insieme di oggetti, un raggruppamento ordinato dei suoi elementi nel quale ogni oggetto 
+è presente una ed una sola volta.
+ NUMERO DELLE PERMUTAZIONI:il numero delle possibili permutazioni di un insieme di elementi distinti, è dato esattamente da n! (n fattoriale)
+
+*/
+	
+	private static void permute(int[] V, int n) {//METODO CHE EFFETTUA LE PERMUTAZIONI DEGLI ELEMENTI DI UN VETTORE
+		//n=poszione elemento del vettore da permutare insieme ad elementi alla sua destra (coda)
+		if (n == V.length-1)//se la posizione coincide con l'ultima del vettore allora non c'è nulla da permutare 
+			print(V);//si stampa il vettore
+		if (n < V.length-1) //se la posizione non coincide con l'ultima del vettore allora gli elementi dalla posizione n all'ultima posizione vanno permutati
+			for (int i=n ; i<V.length; i++) {//si scandisce elementi del vettore dalla posizione n all'ultima posizione
+				swap(V,n,i);//si scambiano elementi in posizione n ed i
+				permute(V,n+1);//si permuta il vettore dalla posizione n+1
+				swap(V,n,i);//si riscambiano elementi del primo scambio mettendoli apposto
+			}
+	}
+	/*COMPLESSITA' DEL METODO permute(int[] V, int n)
+	 *NB:non si considerano istruzioni il cui costo è costante 
+	 * T(permute,n)=T(print)+T(for i)x[T(permute,n-1)]
+	 * T(permute,n)=   O(n) +    O(n)xO(n!) = O(n!*n). 
+	 * NB: essendo dalla teoria di calcolo combinatorio le possibili permutazion n! , allora ci saranno n! chiamate ricorsive della funzione permute*/
+	
+	public static void main(String[] args) {//MAIN
+//		int n = 3;
+//		hanoi(n, 'A', 'B', 'C');
+//		num = 0;
+		
+		int[] V = { 1, 2, 3 }; 
+		permute(V,0);
+		
+	}
+
+}
